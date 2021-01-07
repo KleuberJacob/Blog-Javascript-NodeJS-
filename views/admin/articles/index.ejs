@@ -1,0 +1,48 @@
+<%- include ('../../partials/navbar.ejs') -%>
+<%- include ('../../partials/header.ejs') -%>
+
+<div class="container">
+    <hr>
+    <h2>Artigos</h2>
+    <a class="btn btn-success" href="/admin/articles/new">Criar novo artigo</a>
+    <hr>
+    <table class="table table-bordered" >
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Título</th>
+                <th>Slug</th>
+                <th>Categoria</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% articles.forEach(article => { %>
+                <tr>  
+                    <td><%= article.id %></td>
+                    <td><%= article.title %></td>
+                    <td><%= article.slug %></td>
+                    <td><%= article.category.title %></td>
+                    <td> 
+                        <form method="POST" action="/articles/delete" style="display: inline" onsubmit="confirmarExclusão(event, this)">
+                            <input type="hidden" name="id" value="<%= article.id %>">
+                            <button class="btn btn-danger">Excluir</button>
+                        </form>                        
+                    </td>
+                </tr>  
+            <% }) %>
+        </tbody>
+    </table>
+</div>
+
+<%- include ('../../partials/footer.ejs') -%>
+
+<script>
+    function confirmarExclusão(event, form) { // Funçao com 2 parametros que intercepta o envio do form a fim de ter certeza da exclusao da categoria
+        event.preventDefault() // Parametro utilizado para prevenir o comportamento padrao do form que é sr submetido(enviado)
+        let decisao = window.confirm('Deseja excluir o artigo? ') // Criando pop up onde será retornado True or False
+        if(decisao) { // Se for verdadeiro/true = (sim)
+            form.submit() // Utilizamos o segundo parametro para realizar a açao de submeter o formulário
+        }
+    }
+</script>

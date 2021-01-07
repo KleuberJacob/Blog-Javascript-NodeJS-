@@ -1,0 +1,53 @@
+<!DOCTYPE HTML>
+<%- include ('../../partials/navbar.ejs') -%>
+<%- include ('../../partials/header.ejs') -%>
+
+<div class="container">
+    <hr>
+    <div class="card">
+        <div class="card-header">
+            <h2>Editar Artigo</h2>
+        </div>  
+        <div class="card-body">             
+            <form method="POST" action="/articles/update">  <!-- Formulário para criaçao de artigos incluindo a lib tinyMCE como editor de texto -->  
+                <input type="hidden" value="<%= article.id %>" name="id">
+                <input class="form-control" type="text" name="titulo" placeholder="Informe o título de seu artigo"><br>
+                <textarea class="form-control" name="body" id="body"></textarea><br>
+                <label>Selecione uma categoria para seu artigo.</label>
+                <select class="form-control" name="categorie" id="categorie">
+                    <% categories.forEach((category) => { %>
+                        <% if(category.id == article.categoryId){ %>
+                            <option value="<%= category.id %>" selected><%= category.title %></option>
+                        <% } else { %>
+                            <option value="<%= category.id %>"><%= category.title %></option>
+                        <% } %>   
+                    <% }) %>
+                </select>
+                <br>
+                <button class=" btn btn-success">Salvar Edição</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div id="content" style="display: none;">
+    <%- article.body %>
+</div>
+
+<%- include ('../../partials/footer.ejs') -%>
+
+<script src="/tinymce/tinymce.min.js"></script>
+
+<script>
+    // Inicializando a lib tinyMCE utilizando a mesma na text área através de seu seletor
+    tinymce.init({
+        language: "pt_BR", // Após instalado pacote de linguagens podemos mover o arquivo js para pasta lang(tinyMCE) dentro do projeto
+        selector: "#body", 
+        plugins: [
+        'advlist autolink link image lists print preview hr searchreplace wordcount fullscreen insertdatetime media save table paste emoticons'
+        ], // Ativando plugins que já vem pré instalados no tinyMCE a fim de aumentar suas funcionalidades separados apenas por espaços       
+        init_instance_callback: () => {
+             tinymce.get("body").setContent(jQuery("#content").html())
+        }
+    })
+</script>
